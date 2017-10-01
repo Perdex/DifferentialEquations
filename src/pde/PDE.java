@@ -22,6 +22,11 @@ public class PDE {
                 //new Thread(new pde.one.Starter()).start();
                 new pde.one.Starter().run();
                 break;
+            case 1:
+                System.out.println("1D");
+                //new Thread(new pde.one.Starter()).start();
+                new pde.two.Starter().run();
+                break;
         }
     }
 
