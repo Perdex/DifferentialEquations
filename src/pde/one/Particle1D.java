@@ -3,9 +3,9 @@ package pde.one;
 
 public class Particle1D {
     
-    private static final double swave = 0.2, dampwave = 0.002, sheat = 0.99, tdamp = 0.00001;
+    private static final double swave = 0.2, dampwave = 0.002, sheat = 0.99, tdamp = 0.9975;
     double y, vy;
-    int x;
+    final int x;
     private final Type type;
 
     Particle1D(int x, double vy, Type type){
@@ -76,8 +76,8 @@ public class Particle1D {
                 vy = - dy;
                 break;
             case dampedTransport:
-                vy = - dy;
-                y *= Math.exp(-tdamp*x);
+                vy = - dy * tdamp;
+                y *= tdamp;
                 break;
             
         }

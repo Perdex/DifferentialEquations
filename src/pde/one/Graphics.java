@@ -40,17 +40,20 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
     @Override
     public void paint(java.awt.Graphics g){
         
-        g.clearRect(0, 0, width, height);
+        g.clearRect(0, 0, getWidth(), getHeight());
         float linecol = 0.9f;
         g.setColor(new Color(linecol, linecol, linecol));
-        g.drawLine(0, height / 2, width, height/2);
+        g.drawLine(0, getHeight() / 2, width, getHeight() / 2);
         
         g.setColor(Color.red);
         for(int i = 1; i < logic.N; i++)
-            g.drawLine((int)logic.particles[i-1].x, (int)logic.particles[i-1].y + height / 2,
-                        (int)logic.particles[i].x, (int)logic.particles[i].y + height / 2);
+            g.drawLine(xInScreen(i-1), (int)logic.particles[i-1].y + getHeight() / 2,
+                        xInScreen(i), (int)logic.particles[i].y + getHeight() / 2);
     }
 
+    private int xInScreen(int i){
+        return (int)((double)logic.particles[i].x / logic.N * getWidth());
+    }
 
     @Override
     public void mousePressed(MouseEvent e){
