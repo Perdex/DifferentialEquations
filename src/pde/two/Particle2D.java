@@ -15,15 +15,15 @@ public class Particle2D {
         this.type = type;
     }
     
+    void reset(){
+        z = 0;
+        vz = 0;
+    }
+    
     void mouseAt(double mx, double my, int sign){
         double dx = x - mx;
         double dy = x - my;
         double distsq = dx * dx + dy * dy + 1;
-        
-        if(distsq < 0)
-            System.err.println("asddfqwrqgasfaqrwfa");
-        
-        System.out.println("sign: " + sign);
         
         switch(type){
             case heat:

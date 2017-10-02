@@ -9,11 +9,19 @@ public class Logic{
     double mouseX, mouseY;
     int mouseActive = 0;
     
+    double sineFreq = 0.5;
+    double sineStrength = 0;
+    int sineX, sineY;
+    
+    private boolean reset = false;
+    
     private final Type type;
 
     Logic(Type type){
         N = 300;
         M = 300;
+        sineX = N / 2;
+        sineY = M / 2;
         particles = new Particle2D[N][M];
         this.type = type;
         for(int i = 0; i < N; i++)
@@ -21,10 +29,21 @@ public class Logic{
             particles[i][j] = new Particle2D((double)i/N, (double)j/M, 0, type);
     }
     
+    public void reset(){
+        reset = true;
+    }
+    
     public void start(){
         System.out.println("Starting logic loop");
         double dt = 1, t = 0;
         while(true){
+            
+            if(reset){
+                reset = false;
+                for(int i = 0; i < N; i++)
+                    for(int j = 0; j < M; j++)
+                        particles[i][j].reset();
+            }
             
             //Calculate the differential equation
             for(int i = 1; i < N-1; i++)
@@ -42,6 +61,8 @@ public class Logic{
                     for(int j = yfrom; j <= yto; j++)
                         particles[i][j].mouseAt(mouseX, mouseY, mouseActive);
             }
+            
+            particles[sineX][sineY].z += 0.1 * sineStrength * Math.sin(t * sineFreq);
             //Set edge conditions
 //            if(type == Type.wave){
 //                particles[N-1].y = 20 * Math.sin(t * 0.01);
@@ -53,7 +74,7 @@ public class Logic{
                 for(int j = 1; j < M; j++)
                     particles[i][j].move(dt);
             
-            t += dt;
+            t += dt * 0.001;
             try{
                 Thread.sleep(type.sleepTime);
             }catch(InterruptedException e){}

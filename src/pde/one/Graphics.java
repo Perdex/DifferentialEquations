@@ -41,7 +41,7 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
     public void paint(java.awt.Graphics g){
         
         g.clearRect(0, 0, getWidth(), getHeight());
-        float linecol = 0.9f;
+        float linecol = 0.7f;
         g.setColor(new Color(linecol, linecol, linecol));
         g.drawLine(0, getHeight() / 2, width, getHeight() / 2);
         

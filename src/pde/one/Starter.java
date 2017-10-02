@@ -6,37 +6,57 @@ import javax.swing.JOptionPane;
 
 public class Starter implements Runnable{
 
+    private final int type;
+    public Starter(int type){
+        this.type = type;
+    }
+    
     @Override
     public void run(){
         
-        Object[] options = {"Wave equation", "Heat equation", "Transport equation", "Damped transport equation"};
-        String choice = (String)JOptionPane.showInputDialog(null,
-                                                "Which equation do you want to model?",
-                                                "Choose equation",
-                                                JOptionPane.PLAIN_MESSAGE,
-                                                null,
-                                                options,
-                                                0);
-        Type type = null;
-        if(choice.equals(options[0]))
-            type = Type.wave;
-        else if(choice.equals(options[1]))
-            type = Type.heat;
-        else if(choice.equals(options[2]))
-            type = Type.transport;
-        else if(choice.equals(options[3]))
-            type = Type.dampedTransport;
+//        Object[] options = {"Wave equation", "Heat equation", "Transport equation", "Damped transport equation"};
+//        String choice = (String)JOptionPane.showInputDialog(null,
+//                                                "Which equation do you want to model?",
+//                                                "Choose equation",
+//                                                JOptionPane.PLAIN_MESSAGE,
+//                                                null,
+//                                                options,
+//                                                0);
+//        Type type = null;
+//        if(choice.equals(options[0]))
+//            type = Type.wave;
+//        else if(choice.equals(options[1]))
+//            type = Type.heat;
+//        else if(choice.equals(options[2]))
+//            type = Type.transport;
+//        else if(choice.equals(options[3]))
+//            type = Type.dampedTransport;
         
-        if(type == null)
+        Type t = null;
+        switch(type){
+            case 0:
+                t = Type.wave;
+                break;
+            case 1:
+                t = Type.heat;
+                break;
+            case 2:
+                t = Type.transport;
+                break;
+            case 3:
+                t = Type.dampedTransport;
+                break;
+        }
+        if(t == null)
             return;
         
-        System.out.println("Type is: " + type);
+        System.out.println("Type is: " + t);
         
         JFrame frame = new JFrame("It's all wiggily!!!");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         int w = 1000, h = 600;
-        Logic logic = new Logic(w, type);
+        Logic logic = new Logic(w, t);
         Graphics graphics = new Graphics(logic, w, h);
         frame.add(graphics);
 
@@ -48,7 +68,7 @@ public class Starter implements Runnable{
                         (int)(screen.getHeight() / 2 - frame.getHeight() / 2),
                         frame.getWidth(), frame.getHeight());
         frame.setVisible(true);
-        JOptionPane.showMessageDialog(null, type.getDescription());
+        JOptionPane.showMessageDialog(null, t.getDescription());
         
         new Thread(graphics).start();
         logic.start();

@@ -58,6 +58,11 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
             }
         g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
         
+        g.setColor(Color.white);
+        g.drawOval(logic.sineX * getWidth() / logic.N - 2,
+                    logic.sineY * getHeight()/ logic.M - 2,
+                    5, 5);
+        
     }
     
     public int toRGB(double d){
@@ -90,7 +95,6 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
     int button = 0;
     @Override
     public void mousePressed(MouseEvent e){
-        System.out.println(e.getButton());
         logic.mouseX = (double)e.getX() / getWidth();
         logic.mouseY = (double)e.getY() / getHeight();
         logic.mouseActive = e.getButton() == 1 ? 1 : -1;

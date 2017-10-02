@@ -30,7 +30,12 @@ public class Logic{
                 particles[i].interact(dt, i, particles);
             
             //apply mouse interaction
-            if(mouseActive)
+            if(type == Type.dampedTransport || type == Type.transport)
+                if(mouseActive)
+                    particles[0].y = mouseY;
+                else
+                    particles[0].y = 0;
+            else if(mouseActive)
                 for(int i = 0; i < N-1; i++)
                     particles[i].mouseAt(mouseX, mouseY, mouseXprev, mouseYprev);
             

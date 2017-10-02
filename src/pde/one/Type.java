@@ -1,5 +1,7 @@
 package pde.one;
 
+import javax.swing.*;
+
 public enum Type{
     wave("wave", 1, 0),
     heat("heat", 1, 1),
@@ -22,9 +24,16 @@ public enum Type{
         "The wave equation,\n∂²u/∂t² - c²Δu = 0",
         "The heat equation,\n∂u/∂t - αΔu = 0",
         "The transport equation,\n∂u/∂t + c∂u/∂x = 0",
-        "The damped transport equation,\n∂u/∂t + c∂u/∂x + au = 0\nStill a tiny bit buggy :("};
+        "The damped transport equation,\n∂u/∂t + c∂u/∂x + au = 0"};
     String getDescription(){
         return descriptions[idx];
     }
     
+    JPanel makeOptions(){
+        JPanel p = new JPanel();
+        
+        
+        
+        return p;
+    }
 }
