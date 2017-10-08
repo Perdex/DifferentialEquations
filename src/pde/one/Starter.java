@@ -1,8 +1,15 @@
 package pde.one;
 
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import pde.Type;
 
 public class Starter implements Runnable{
 
@@ -13,25 +20,6 @@ public class Starter implements Runnable{
     
     @Override
     public void run(){
-        
-//        Object[] options = {"Wave equation", "Heat equation", "Transport equation", "Damped transport equation"};
-//        String choice = (String)JOptionPane.showInputDialog(null,
-//                                                "Which equation do you want to model?",
-//                                                "Choose equation",
-//                                                JOptionPane.PLAIN_MESSAGE,
-//                                                null,
-//                                                options,
-//                                                0);
-//        Type type = null;
-//        if(choice.equals(options[0]))
-//            type = Type.wave;
-//        else if(choice.equals(options[1]))
-//            type = Type.heat;
-//        else if(choice.equals(options[2]))
-//            type = Type.transport;
-//        else if(choice.equals(options[3]))
-//            type = Type.dampedTransport;
-        
         Type t = null;
         switch(type){
             case 0:
@@ -44,7 +32,7 @@ public class Starter implements Runnable{
                 t = Type.transport;
                 break;
             case 3:
-                t = Type.dampedTransport;
+                t = Type.combination;
                 break;
         }
         if(t == null)
@@ -68,9 +56,51 @@ public class Starter implements Runnable{
                         (int)(screen.getHeight() / 2 - frame.getHeight() / 2),
                         frame.getWidth(), frame.getHeight());
         frame.setVisible(true);
-        JOptionPane.showMessageDialog(null, t.getDescription());
+        //JOptionPane.showMessageDialog(null, t.getDescription());
         
-        new Thread(graphics).start();
+        JFrame settings = makeSettings(logic);
+        
+        Thread graphicsThread = new Thread(graphics);
+        
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e){
+                settings.dispose();
+                graphics.stop();
+                logic.stop();
+            }
+        });
+        
+        graphicsThread.start();
         logic.start();
+    }
+    
+    private JFrame makeSettings(Logic logic){
+        JFrame frame = new JFrame("Settings");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        
+        p.add(logic.type.makeOptions());
+        
+        JButton reset = new JButton("Reset");
+        reset.setAlignmentX(0.5f);
+        reset.addActionListener((ActionEvent e) -> {
+            logic.reset();
+        });
+        p.add(Box.createVerticalStrut(10));
+        p.add(reset);
+        p.add(Box.createVerticalStrut(10));
+        
+        frame.add(p);
+        frame.pack();
+        //position frame to the center of screen
+        java.awt.Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setBounds((int)(screen.getWidth() / 2 + 520), 
+                        (int)(screen.getHeight() / 2 - frame.getHeight() / 2),
+                        frame.getWidth(), frame.getHeight());
+        frame.setVisible(true);
+        return frame;
     }
 }

@@ -53,20 +53,20 @@ public class PDE {
         p.add(b);
         p.add(Box.createVerticalStrut(10));
         
+        b = new JButton("1D heat & wave");
+        b.setMargin(new Insets(vert, hor, vert, hor));
+        b.setAlignmentX(0.5f);
+        b.addActionListener((ActionEvent e) -> {
+            new Thread(new pde.one.Starter(3)).start();
+        });
+        p.add(b);
+        p.add(Box.createVerticalStrut(10));
+        
         b = new JButton("1D transport equation");
         b.setMargin(new Insets(vert, hor, vert, hor));
         b.setAlignmentX(0.5f);
         b.addActionListener((ActionEvent e) -> {
             new Thread(new pde.one.Starter(2)).start();
-        });
-        p.add(b);
-        p.add(Box.createVerticalStrut(10));
-        
-        b = new JButton("1D damped transport");
-        b.setMargin(new Insets(vert, hor, vert, hor));
-        b.setAlignmentX(0.5f);
-        b.addActionListener((ActionEvent e) -> {
-            new Thread(new pde.one.Starter(3)).start();
         });
         p.add(b);
         p.add(Box.createVerticalStrut(10));

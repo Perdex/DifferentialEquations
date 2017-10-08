@@ -7,11 +7,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
-
 public class Graphics extends JPanel implements Runnable, MouseListener, MouseMotionListener{
 
     private final int width, height;
     private final Logic logic;
+    private boolean stopflag = false;
     
     public Graphics(Logic logic, int width, int height){
         setPreferredSize(new Dimension(width, height));
@@ -24,12 +24,15 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
         this.logic = logic;
     }
     
-
+    void stop(){
+        stopflag = true;
+    }
+    
     @Override
     public void run(){
         System.out.println("Starting draw loop");
         
-        while(true){
+        while(!stopflag){
             repaint();
             try{
                 Thread.sleep(50);
@@ -47,8 +50,8 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
         
         g.setColor(Color.red);
         for(int i = 1; i < logic.N; i++)
-            g.drawLine(xInScreen(i-1), (int)logic.particles[i-1].y + getHeight() / 2,
-                        xInScreen(i), (int)logic.particles[i].y + getHeight() / 2);
+            g.drawLine(xInScreen(i-1), (int)logic.particles[i-1].u + getHeight() / 2,
+                        xInScreen(i), (int)logic.particles[i].u + getHeight() / 2);
     }
 
     private int xInScreen(int i){
@@ -57,6 +60,7 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
 
     @Override
     public void mousePressed(MouseEvent e){
+        requestFocus();
         //When pressed, set prev values to same
         logic.mouseX = e.getX();
         logic.mouseY = e.getY() - height / 2;

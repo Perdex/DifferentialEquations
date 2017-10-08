@@ -2,19 +2,19 @@ package pde.two;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
-
+import pde.Type;
 
 public class Graphics extends JPanel implements Runnable, MouseListener, MouseMotionListener{
 
-    private final int width, height;
     private final Logic logic;
     private final Type type;
+    private boolean stopflag = false;
+    double colorStrength = 1;
     
     public Graphics(Logic logic, int width, int height, Type type){
         setPreferredSize(new Dimension(width, height));
@@ -22,18 +22,19 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
         addMouseListener(this);
         addMouseMotionListener(this);
         
-        this.width = width;
-        this.height = height;
         this.logic = logic;
         this.type = type;
     }
     
-
+    void stop(){
+        stopflag = true;
+    }
+    
     @Override
     public void run(){
         System.out.println("Starting draw loop");
         
-        while(true){
+        while(!stopflag){
             repaint();
             try{
                 Thread.sleep(50);
@@ -44,39 +45,42 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
     @Override
     public void paint(java.awt.Graphics g){
         
-        g.clearRect(0, 0, width, height);
+        g.clearRect(0, 0, getWidth(), getHeight());
         float linecol = 0.9f;
         g.setColor(new Color(linecol, linecol, linecol));
-        g.drawLine(0, height / 2, width, height/2);
+        g.drawLine(0, getHeight() / 2, getWidth(), getHeight()/2);
         
         BufferedImage img = new BufferedImage(logic.N, logic.M, BufferedImage.TYPE_INT_RGB);
         
         for(int i = 1; i < logic.N; i++)
             for(int j = 0; j < logic.M; j++){
                 Particle2D p = logic.particles[i][j];
-                img.setRGB(i, j, toRGB(p.z));
+                img.setRGB(i, j, logic.pic[i][j] ? toRGB(p.u) : 0x404040);
             }
         g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
         
-        g.setColor(Color.white);
-        g.drawOval(logic.sineX * getWidth() / logic.N - 2,
-                    logic.sineY * getHeight()/ logic.M - 2,
-                    5, 5);
-        
+        //draw sine gen pos
+        if(logic.sineStrength != 0){
+            g.setColor(Color.white);
+            g.drawOval(logic.sineX * getWidth() / logic.N - 2,
+                        logic.sineY * getHeight()/ logic.M - 2,
+                        5, 5);
+        }
     }
     
     public int toRGB(double d){
+        d *= colorStrength;
         int r = 0, g = 0, b = 0;
         
         if(type == Type.heat){
-            double val = d * 100;
+            double val = d * 50;
                 b = clampByte(-val);
                 r = clampByte(val);
                 
                 val = Math.abs(val);
                 g = clampByte(val - 200);
         }else if(type == Type.wave){
-            int val = (int)(10 * d);
+            int val = (int)(20 * d);
             if(val < 0)
                 b = clampByte(-val);
             else
