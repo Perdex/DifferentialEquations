@@ -1,7 +1,10 @@
 package pde.two;
 
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
@@ -68,9 +71,32 @@ public class Starter implements Runnable{
     private JFrame makeWaveSettings(Logic logic, Graphics graphics){
         JFrame frame = new JFrame("Settings");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setUndecorated(true);
         
         JPanel p = new JPanel();
+        p.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEtchedBorder(),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        
+        
+        MouseAdapter ma = new MouseAdapter(){
+            int x, y;
+            @Override
+            public void mouseDragged(MouseEvent e){
+                Point p = frame.getLocation();
+                p.translate(e.getX() - x, e.getY() - y);
+                frame.setLocation(p);
+            }
+            @Override
+            public void mousePressed(MouseEvent e){
+                x = e.getX();
+                y = e.getY();
+            }
+        };
+
+        p.addMouseListener(ma);
+        p.addMouseMotionListener(ma);
         
         p.add(logic.type.makeOptions());
         
