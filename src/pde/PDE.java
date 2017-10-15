@@ -53,26 +53,30 @@ public class PDE {
         p.add(b);
         p.add(Box.createVerticalStrut(10));
         
-        b = new JButton("1D heat & wave");
-        b.setMargin(new Insets(vert, hor, vert, hor));
-        b.setAlignmentX(0.5f);
-        b.addActionListener((ActionEvent e) -> {
-            new Thread(new pde.one.Starter(3)).start();
-        });
-        p.add(b);
-        p.add(Box.createVerticalStrut(10));
+        // Was used for combined heat and wave equations, but they
+        // were never implemented correctly. Adding damping to wave
+        // has basically the same effect
+//        b = new JButton("1D heat & wave");
+//        b.setMargin(new Insets(vert, hor, vert, hor));
+//        b.setAlignmentX(0.5f);
+//        b.addActionListener((ActionEvent e) -> {
+//            new Thread(new pde.one.Starter(3)).start();
+//        });
+//        p.add(b);
+//        p.add(Box.createVerticalStrut(10));
         
-        b = new JButton("1D transport equation");
-        b.setMargin(new Insets(vert, hor, vert, hor));
-        b.setAlignmentX(0.5f);
-        b.addActionListener((ActionEvent e) -> {
-            new Thread(new pde.one.Starter(2)).start();
-        });
-        p.add(b);
-        p.add(Box.createVerticalStrut(10));
+//        b = new JButton("1D transport equation");
+//        b.setMargin(new Insets(vert, hor, vert, hor));
+//        b.setAlignmentX(0.5f);
+//        b.addActionListener((ActionEvent e) -> {
+//            new Thread(new pde.one.Starter(2)).start();
+//        });
+//        p.add(b);
+//        p.add(Box.createVerticalStrut(10));
         
         frame.add(p);
         frame.pack();
+        frame.setSize(200, frame.getHeight());
         
         frame.setLocation(200, 300);
         frame.setVisible(true);

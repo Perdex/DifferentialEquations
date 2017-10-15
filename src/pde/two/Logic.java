@@ -15,8 +15,8 @@ public class Logic{
     double mouseX, mouseY;
     int mouseActive = 0;
     
-    double sineFreq = 2;
-    double sineStrength = 0;
+    double sineFreq = 0;
+    double sineStrength = 50;
     int sineX, sineY;
     boolean circleConstraint = false, pictureConstraint = false, freezeEdges = true;
     boolean[][] pic;
@@ -86,7 +86,6 @@ public class Logic{
             return;
         
         File file = fc.getSelectedFile();
-            //This is where a real application would open the file.
         try{
             img = ImageIO.read(file);
         }catch(IOException e){
@@ -100,7 +99,7 @@ public class Logic{
         int imgh = img.getHeight();
         for(int i = 0; i < N; i++)
             for(int j = 0; j < M; j++)
-                pic[i][j] = img.getRGB(i * imgw / N, j * imgh / M) < -100;
+                pic[i][j] = (img.getRGB(i * imgw / N, j * imgh / M) & 0xFF) < 100;
             
         pictureConstraint = true;
         circleConstraint = false;
@@ -110,6 +109,7 @@ public class Logic{
         System.out.println("Starting logic loop");
         double dt = 0.001;
         long t = System.nanoTime();
+        double sinePos = 0;
         while(!stopflag){
             
             if(resetflag){
@@ -120,10 +120,7 @@ public class Logic{
             }
             int buff = freezeEdges ? 1 : 0;
             //Calculate the differential equation
-            for(int i = buff; i < N-buff; i++)
-                for(int j = buff; j < M-buff; j++)
-                    if(pic[i][j])
-                        particles[i][j].interact(dt, 1.0/N, 1.0/M, particles);
+            Particle2D.interact(dt, 1.0/N, 1.0/M, particles, pic, buff, N-buff, buff, M-buff);
             
             //apply mouse interaction
             if(mouseActive != 0){
@@ -138,23 +135,26 @@ public class Logic{
             }
             
             //Add sine generator effect
-            particles[sineX][sineY].u += 0.1 * sineStrength * Math.sin(t * 1e-9 * sineFreq);
+            particles[sineX][sineY].u += sineStrength * Math.sin(sinePos);
+            sinePos += dt * sineFreq * 2;
+            if(sineFreq == 0)
+                sinePos = 0;
 
             //TODO set edge conditions
             
             //move the particles
-            for(int i = buff; i < N-buff; i++)
-                for(int j = buff; j < M-buff; j++)
+            for(int i = 1; i < N-1; i++)
+                for(int j = 1; j < M-1; j++)
                     if(pic[i][j])
                         particles[i][j].move(dt);
             
             long now = System.nanoTime();
-            //dt = (now - t) * 1e-9;
+            dt = (now - t) * 1e-9;
             t = now;
             
             int towait = (int)(type.sleepTime - dt * 1e-6);
             
-            //dt = Math.min(dt, 0.002);
+            dt = Math.min(dt, 0.0012);
             
             if(towait > 10000)
                 try{

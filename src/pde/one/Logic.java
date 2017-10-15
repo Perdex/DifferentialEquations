@@ -10,11 +10,11 @@ public class Logic{
     
     int mouseX, mouseY, mouseXprev = -1, mouseYprev = -1;
     boolean mouseActive = false, stopflag = false, resetflag = false;
-    
+    double sine = 0;
     final Type type;
 
     Logic(int width, Type type){
-        this.N = width + 1;
+        this.N = width;
         this.particles = new Particle1D[N];
         this.type = type;
         for(int i = 0; i < N; i++)
@@ -32,10 +32,12 @@ public class Logic{
         System.out.println("Starting logic loop");
         double dt = 0.01;
         long t = System.nanoTime();
+        double sinePos = 0;
         while(!stopflag){
             
             if(resetflag){
                 resetflag = false;
+                sinePos = 0;
                 for(int i = 0; i < N; i++)
                     particles[i] = new Particle1D(i, 0, type);
             }
@@ -55,9 +57,15 @@ public class Logic{
             
             //Set edge conditions
             if(type == Type.wave){
-                particles[N-1].u = 20 * Math.sin(t * 2e-9);
-            }else if(type == Type.heat)
-                particles[N-1].u = -150 * (1 - Math.cos(t * 1e-9));
+                particles[N-1].u = 20 * Math.sin(sinePos);
+                sinePos += sine * dt * 20;
+            }else if(type == Type.heat){
+                particles[N-1].u = -150 * (1 - Math.cos(sinePos));
+                sinePos += sine * dt * 10;
+            }else if(type == Type.transport){
+                particles[0].u = 200 * Math.sin(sinePos);
+                sinePos += sine * dt * 3;
+            }
             
             //move the particles
             for(int i = 1; i < N; i++)
@@ -69,7 +77,7 @@ public class Logic{
             
             int towait = (int)(type.sleepTime - dt * 1e-6);
             
-            dt = Math.min(dt, 0.002);
+            dt = Math.min(dt, 0.001);
             
             if(towait > 10000)
                 try{

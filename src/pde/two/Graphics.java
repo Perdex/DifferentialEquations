@@ -74,11 +74,11 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
         
         if(type == Type.heat){
             double val = d * 50;
-                b = clampByte(-val);
-                r = clampByte(val);
-                
-                val = Math.abs(val);
-                g = clampByte(val - 200);
+            r = clampByte(val);
+            r = Math.max(r, clampByte(-val - 520));
+            g = clampByte(Math.abs(val) - 220);
+            b = clampByte(-val);
+            b = Math.max(b, clampByte(val - 520));
         }else if(type == Type.wave){
             int val = (int)(20 * d);
             if(val < 0)

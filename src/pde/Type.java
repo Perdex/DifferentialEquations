@@ -8,10 +8,9 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 
 public enum Type{
-    wave("wave", 2, 0),
-    heat("heat", 2, 1),
-    transport("transport", 10, 2),
-    combination("combined heat and wave", 2, 3);
+    wave("wave", 1, 0),
+    heat("heat", 1, 1),
+    transport("transport", 10, 2);
     
     private final String asText;
     public final int sleepTime;
@@ -29,27 +28,21 @@ public enum Type{
         return asText;
     }
     private static final String[] descriptions = {
-        "<html>The damped wave equation,<br>"
-            + "∂²u/∂t² - c²Δu + a∂u/∂t = 0</html>",
+        "<html><h2>The damped wave equation,<br>"
+            + "∂²u/∂t² - c²Δu + a∂u/∂t = 0</h2></html>",
         "<html>The heat equation,<br>"
             + "∂u/∂t - αΔu = 0</html>",
         "<html>The damped transport equation,<br>"
-            + "∂u/∂t + c∂u/∂x + au = 0</html>",
-        "<html>Combined heat and wave equations,<br>"
-            + "∂²u/∂t² - c²Δu + a∂u/∂t = 0<br>"
-            + "and<br>"
-            + "∂u/∂t - αΔu = 0</html>"};
+            + "∂u/∂t + c∂u/∂x + au = 0</html>"};
     private final double[][] initialCoeffs = {
         {30, 0.1},
-        {0.5},
-        {0.05, 0.05},
-        {30, 0.001, 0.5}
+        {0.8},
+        {0.15, 0.05}
     };
     private static final String[][] settingNames = {
         {"c² (tension)", "a (damping)"},
         {"α (diffuse speed)"},
-        {"c (speed)", "a (damping)"},
-        {"c² (tension)", "a (damping)", "α (diffuse speed)"}
+        {"c (speed)", "a (damping)"}
     };
     private static final int[] settingCount = {
         2, 1, 2, 3
@@ -58,9 +51,10 @@ public enum Type{
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         
-        p.add(new JLabel(descriptions[idx]));
+        JPanel mid = new JPanel();
+        mid.add(new JLabel(descriptions[idx]));
+        p.add(mid);
         p.add(Box.createVerticalStrut(10));
-        JPanel mid;
         
         for(int i = 0; i < settingCount[idx]; i++){
             mid = new JPanel();

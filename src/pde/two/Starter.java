@@ -1,5 +1,6 @@
 package pde.two;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -116,7 +117,7 @@ public class Starter implements Runnable{
         
         mid = new JPanel();
         mid.add(new JLabel("F:"));
-        JSlider sFreq = new JSlider(2, 20, 2);
+        JSlider sFreq = new JSlider(0, 20, 0);
         sFreq.setAlignmentX(0.5f);
         sFreq.addChangeListener((ChangeEvent e) -> {
             logic.sineFreq = 1.0 * sFreq.getValue();
@@ -124,15 +125,15 @@ public class Starter implements Runnable{
         mid.add(sFreq);
         p.add(mid);
         
-        mid = new JPanel();
-        mid.add(new JLabel("A:"));
-        JSlider sStrength = new JSlider(0, 10, 0);
-        sStrength.setAlignmentX(0.5f);
-        sStrength.addChangeListener((ChangeEvent e) -> {
-            logic.sineStrength = 30 * sStrength.getValue();
-        });
-        mid.add(sStrength);
-        p.add(mid);
+//        mid = new JPanel();
+//        mid.add(new JLabel("A:"));
+//        JSlider sStrength = new JSlider(0, 10, 0);
+//        sStrength.setAlignmentX(0.5f);
+//        sStrength.addChangeListener((ChangeEvent e) -> {
+//            logic.sineStrength = 30 * sStrength.getValue();
+//        });
+//        mid.add(sStrength);
+//        p.add(mid);
         
         mid = new JPanel();
         mid.add(new JLabel("x:"));

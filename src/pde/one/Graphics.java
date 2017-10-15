@@ -12,6 +12,8 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
     private final int width, height;
     private final Logic logic;
     private boolean stopflag = false;
+    boolean motionBlur = false;
+    int drawTime = 2000;
     
     public Graphics(Logic logic, int width, int height){
         setPreferredSize(new Dimension(width, height));
@@ -35,23 +37,29 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
         while(!stopflag){
             repaint();
             try{
-                Thread.sleep(50);
+                Thread.sleep(drawTime / 100, (drawTime % 100) * 10000);
             }catch(InterruptedException e){}
         }
     }
     
     @Override
     public void paint(java.awt.Graphics g){
-        
         g.clearRect(0, 0, getWidth(), getHeight());
         float linecol = 0.7f;
         g.setColor(new Color(linecol, linecol, linecol));
         g.drawLine(0, getHeight() / 2, width, getHeight() / 2);
         
         g.setColor(Color.red);
-        for(int i = 1; i < logic.N; i++)
-            g.drawLine(xInScreen(i-1), (int)logic.particles[i-1].u + getHeight() / 2,
-                        xInScreen(i), (int)logic.particles[i].u + getHeight() / 2);
+        if(!motionBlur){
+            for(int i = 1; i < logic.N; i++)
+                g.drawLine(xInScreen(i-1), (int)logic.particles[i-1].u + getHeight() / 2,
+                            xInScreen(i), (int)logic.particles[i].u + getHeight() / 2);
+        }else{
+            for(int i = 1; i < logic.N; i++)
+                g.drawLine(xInScreen(i), (int)logic.particles[i].blurMin() + getHeight() / 2,
+                            xInScreen(i), (int)logic.particles[i].blurMax() + getHeight() / 2);
+        }
+            
     }
 
     private int xInScreen(int i){
