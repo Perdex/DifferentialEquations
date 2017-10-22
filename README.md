@@ -1,18 +1,9 @@
 # DifferentialEquations
-Inspired by the WaveEquation, I implemented all kinds of equations to this one. 2d versions coming soon.
+Inspired by the WaveEquation, I implemented all kinds of equations to this one.
 
-This program models a few partial differential equations. Currently implemented:
+This program models currently the wave equation and the heat equation in both the 1-dimensional and 2-dimensional cases. 
 
-1-dimensional:
-- wave equation
-- heat equation
-- transport equation
-- transport equation with decay
+Also a bugged version of the wave equation was left into the program, since it was fun to play with (reduce the tension parameter to increase fun!)
 
-2-dimensional:
-at least heat and wave coming soon
-
-
-This could be used to get a more intuitive understanding of ODE:s. Maybe a scripting language could be implemented
-so all kinds of equations could be tried? I'm planning on adding sliders for the coefficients and more info about
-the equations.
+This could be used to get a more intuitive understanding of PDE:s. Maybe a scripting language could be implemented
+so all kinds of equations could be tried?
