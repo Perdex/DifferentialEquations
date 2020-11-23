@@ -11,18 +11,18 @@ public class Logic{
 
     final int N, M;
     Particle2D[][] particles;
-    
+
     double mouseX, mouseY;
     int mouseActive = 0;
-    
+
     double sineFreq = 0;
     double sineStrength = 50;
     int sineX, sineY;
     boolean circleConstraint = false, pictureConstraint = false, freezeEdges = true;
-    boolean[][] pic;
-    
+    double[][] pic;
+
     private boolean resetflag = false, stopflag = false;
-    
+
     final Type type;
 
     Logic(Type type, int size){
@@ -36,75 +36,75 @@ public class Logic{
             for(int j = 0; j < M; j++)
             particles[i][j] = new Particle2D((double)i/N, (double)j/M, i, j, 0, type);
         
-        pic = new boolean[N][M];
+        pic = new double[N][M];
         for(int i = 0; i < N; i++)
             for(int j = 0; j < M; j++)
-                pic[i][j] = true;
+                pic[i][j] = 1;
     }
-    
+
     void stop(){
         stopflag = true;
     }
-    
+
     public void reset(){
         resetflag = true;
     }
-    
+
     public void setCircleConstraint(){
         if(circleConstraint){
             circleConstraint = false;
             for(int i = 0; i < N; i++)
                 for(int j = 0; j < M; j++)
-                    pic[i][j] = true;
+                    pic[i][j] = 1;
             return;
         }
-        
+
         circleConstraint = true;
         pictureConstraint = false;
         for(int i = 0; i < N; i++)
             for(int j = 0; j < M; j++){
                 int dx = i - N / 2;
                 int dy = j - M / 2;
-                pic[i][j] = dx * dx + dy * dy < Math.pow(Math.min(N, M)/2, 2);
+                pic[i][j] = dx * dx + dy * dy < Math.pow(Math.min(N, M)/2, 2) ? 1 : 0;
             }
     }
-    
+
     public void setPictureConstraint(){
         if(pictureConstraint){
             pictureConstraint = false;
             for(int i = 0; i < N; i++)
                 for(int j = 0; j < M; j++)
-                    pic[i][j] = true;
+                    pic[i][j] = 1;
             return;
         }
-        
+
         BufferedImage img = null;
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(null);
 
         if (returnVal != JFileChooser.APPROVE_OPTION)
             return;
-        
+
         File file = fc.getSelectedFile();
         try{
             img = ImageIO.read(file);
         }catch(IOException e){
             System.err.println("Error when opening file:\n" + e);
         }
-        
+
         if(img == null)
             return;
-        
+
         int imgw = img.getWidth();
         int imgh = img.getHeight();
         for(int i = 0; i < N; i++)
             for(int j = 0; j < M; j++)
-                pic[i][j] = (img.getRGB(i * imgw / N, j * imgh / M) & 0xFF) < 100;
-            
+                pic[i][j] = 2 - (img.getRGB(i * imgw / N, j * imgh / M) & 0xFF) * (2. / 256.);
+
         pictureConstraint = true;
         circleConstraint = false;
     }
-    
+
     public void start(){
         System.out.println("Starting logic loop");
         double dt = 0.001;
@@ -139,14 +139,11 @@ public class Logic{
             sinePos += dt * sineFreq * 2;
             if(sineFreq == 0)
                 sinePos = 0;
-
-            //TODO set edge conditions
             
             //move the particles
             for(int i = 1; i < N-1; i++)
                 for(int j = 1; j < M-1; j++)
-                    if(pic[i][j])
-                        particles[i][j].move(dt);
+                    particles[i][j].move(dt);
             
             long now = System.nanoTime();
             dt = (now - t) * 1e-9;

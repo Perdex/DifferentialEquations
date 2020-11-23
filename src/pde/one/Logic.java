@@ -10,6 +10,7 @@ public class Logic{
     
     int mouseX, mouseY, mouseXprev = -1, mouseYprev = -1;
     boolean mouseActive = false, stopflag = false, resetflag = false;
+    boolean riemann_edge_condition = true;
     double sine = 0;
     final Type type;
 
@@ -54,19 +55,26 @@ public class Logic{
             else if(mouseActive)
                 for(int i = 0; i < N-1; i++)
                     particles[i].mouseAt(mouseX, mouseY, mouseXprev, mouseYprev);
-            
-            //Set edge conditions
-            if(type == Type.wave){
-                particles[N-1].u = 20 * Math.sin(sinePos);
-                sinePos += sine * dt * 20;
-            }else if(type == Type.heat){
-                particles[N-1].u = -150 * (1 - Math.cos(sinePos));
-                sinePos += sine * dt * 10;
-            }else if(type == Type.transport){
-                particles[0].u = 200 * Math.sin(sinePos);
-                sinePos += sine * dt * 3;
+
+            if(riemann_edge_condition){
+                particles[0].u = particles[1].u;
+                particles[N-1].u = particles[N-2].u;
             }
-            
+
+            if(sine != 0){
+                //Set edge conditions
+                if(type == Type.wave){
+                    particles[N-1].u = 20 * Math.sin(sinePos);
+                    sinePos += sine * dt * 20;
+                }else if(type == Type.heat){
+                    particles[N-1].u = -150 * (1 - Math.cos(sinePos));
+                    sinePos += sine * dt * 10;
+                }else if(type == Type.transport){
+                    particles[0].u = 200 * Math.sin(sinePos);
+                    sinePos += sine * dt * 3;
+                }
+            }
+
             //move the particles
             for(int i = 1; i < N; i++)
                 particles[i].move(dt);

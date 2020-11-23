@@ -55,7 +55,7 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
         for(int i = 1; i < logic.N; i++)
             for(int j = 0; j < logic.M; j++){
                 Particle2D p = logic.particles[i][j];
-                img.setRGB(i, j, logic.pic[i][j] ? toRGB(p.u) : 0x404040);
+                img.setRGB(i, j, toRGB(p.u, 2-logic.pic[i][j]));
             }
         g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
         
@@ -68,7 +68,7 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
         }
     }
     
-    public int toRGB(double d){
+    public int toRGB(double d, double multiplier){
         d *= colorStrength;
         int r = 0, g = 0, b = 0;
         
@@ -85,8 +85,10 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
                 b = clampByte(-val);
             else
                 r = clampByte(val);
+            b = clampByte(b + multiplier * 100);
+            r = clampByte(r + multiplier * 100);
             
-            g = clampByte(Math.abs(val / 3) - 5);
+            g = clampByte(Math.abs(val / 3) - 5 + multiplier * 100);
         }
         
         return (r << 16) + (g << 8) + b;
