@@ -17,6 +17,7 @@ public class Logic{
 
     double sineFreq = 0;
     double sineStrength = 50;
+    boolean sineActive = False;
     int sineX, sineY;
     boolean circleConstraint = false, pictureConstraint = false, freezeEdges = true;
     double[][] pic;
@@ -99,7 +100,7 @@ public class Logic{
         int imgh = img.getHeight();
         for(int i = 0; i < N; i++)
             for(int j = 0; j < M; j++)
-                pic[i][j] = 2 - (img.getRGB(i * imgw / N, j * imgh / M) & 0xFF) * (2. / 256.);
+                pic[i][j] = 1 - (img.getRGB(i * imgw / N, j * imgh / M) & 0xFF) * (1. / 256.);
 
         pictureConstraint = true;
         circleConstraint = false;
@@ -134,11 +135,16 @@ public class Logic{
                         particles[i][j].mouseAt(mouseX, mouseY, mouseActive);
             }
             
-            //Add sine generator effect
-            particles[sineX][sineY].u += sineStrength * Math.sin(sinePos);
-            sinePos += dt * sineFreq * 2;
-            if(sineFreq == 0)
-                sinePos = 0;
+            if(sineActive){
+                if(sineFreq == 0){
+                    particles[sineX][sineY].u = 0;
+                    sinePos = 0;
+                }else{
+                    //Add sine generator effect
+                    particles[sineX][sineY].u += sineStrength * Math.sin(sinePos);
+                    sinePos += dt * sineFreq * 2;
+                }
+            }
             
             //move the particles
             for(int i = 1; i < N-1; i++)

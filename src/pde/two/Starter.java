@@ -164,6 +164,14 @@ public class Starter implements Runnable{
         });
         p.add(toggleEdges);
         
+        JRadioButton toggleGen = new JRadioButton("Toggle generator");
+        toggleEdges.setSelected(false);
+        toggleEdges.setAlignmentX(1f);
+        toggleEdges.addActionListener((ActionEvent e) -> {
+            logic.sineActive = !logic.sineActive;
+        });
+        p.add(toggleEdges);
+        
         mid = new JPanel();
         JButton toggle = new JButton("Circular constraint");
         toggle.setAlignmentX(0.5f);

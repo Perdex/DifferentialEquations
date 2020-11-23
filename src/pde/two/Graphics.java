@@ -55,7 +55,7 @@ public class Graphics extends JPanel implements Runnable, MouseListener, MouseMo
         for(int i = 1; i < logic.N; i++)
             for(int j = 0; j < logic.M; j++){
                 Particle2D p = logic.particles[i][j];
-                img.setRGB(i, j, toRGB(p.u, 2-logic.pic[i][j]));
+                img.setRGB(i, j, toRGB(p.u, 1-logic.pic[i][j]));
             }
         g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
         
